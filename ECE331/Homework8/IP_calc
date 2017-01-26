@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+die "Usage: ./IP_calc IP_Address Netmask\n" if (scalar @ARGV < 2);
+@IP = split /\./, $ARGV[0];			#split IP address and Netmask on ., save result in lists IP and NM
+@NM = split /\./, $ARGV[1];
+die "Invalid IP address" if (scalar @IP != 4);
+die "Invalid Netmask" if (scalar @NM != 4);
+for ($i = 0; $i < 4; $i = $i + 1) {
+	$NA[$i] = ($IP[$i] + 0) & ($NM[$i] + 0);		#zeroes are added here to make interpreter recognize the values as numbers, not strings
+	$BA[$i] = ($IP[$i] + 0) | (~($NM[$i] + 0) & 0xFF);	#Network address (@NA) and broadcast address (@BA) calculated from IP and netmask
+}								#To get least significant byte of complimented netmask, it is anded with 0xFF
+print "Network Address: $NA[0].$NA[1].$NA[2].$NA[3]\n";
+print "Broadcast Address: $BA[0].$BA[1].$BA[2].$BA[3]\n";

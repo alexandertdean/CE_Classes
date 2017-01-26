@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+use IO::Socket::INET;
+
+#auto-flush on socket
+$| = 1;
+
+#create a connecting socket
+$socket = new IO::Socket::INET (
+	PeerHost => '192.168.1.132',
+	PeerPort => '7777',
+	Proto => 'tcp'
+);
+die "Cannot connect to the server $|\n" unless $socket;
+print "Connected to the server\n";
+$socket->recv($temp, 1024);
+print "$temp";
+#Data to send to a server
+$req = 'Hello World';
+$size = $socket->send($req);
+print "Sent data of length $size\n";
+
+#notify server that request has been sent
+shutdown($socket, 1);
+
+#receive a response of up to 1024 characters from server
+$response = "";
+$socket->recv($response, 1024);
+print "Received response: $response\n";
+
+$socket->close();

@@ -1,0 +1,174 @@
+Alexander Dean
+Homework 8
+April 14, 2016
+
+1	Network Address = IP & Netmask = 32.56.0.0
+	Broadcast Address = IP | ~Netmask = 32.57.255.255
+
+2	Total Number of Addresses = 131072
+	Total Number of Assignable Addresses = 131070
+
+3. Script taken from xmodulo.com/how-to-write-simple-tcp-server-and-client-in-per.html
+
+--------------------------------------TCP Server-------------------------------------------
+#!/usr/bin/perl
+
+#Code for this assignment taken from xmodulo.com/how-to-write-simple-tcp-server-and-client-in-perl.html, and modified for the purposes of this assignment
+use IO::Socket::INET;
+
+# auto0flush on socket
+$| = 1;
+
+# creating a listening socket
+$socket = new IO::Socket::INET (
+	LocalHost => '0.0.0.0',
+	LocalPort => '7777',
+	Proto => 'tcp',
+	Listen => 5,
+	Reuse => 1
+);
+die "Cannot create socket $|\n" unless $socket;
+print "server waiting for client connection port 7777\n";
+
+while(1) {
+	# waiting for a new client connection
+	$client_socket = $socket->accept();
+	$client_address = $client_socket->peerport();
+	print "connection from $client_address:$client_port\n";
+	
+	# read up to 1024 characters from the connected client
+	$data = "";
+	$client_socket->recv($data, 1024);
+	print "Received Data: $data\n";
+
+	#Write response data to the connected client
+	$data = "Data Received";
+	$client_socket->send($data);
+
+	#Notify client that response has been sent
+	shutdown($client_socket, 1);
+}
+
+$socket->close();
+
+-------------------------------------TCP Client--------------------------------------------
+#!/usr/bin/perl
+use IO::Socket::INET;
+
+#auto-flush on socket
+$| = 1;
+
+#create a connecting socket
+$socket = new IO::Socket::INET (
+	PeerHost => '192.168.1.132',
+	PeerPort => '7777',
+	Proto => 'tcp'
+);
+die "Cannot connect to the server $|\n" unless $socket;
+print "Connected to the server\n";
+
+#Data to send to a server
+$req = 'Hello World';
+$size = $socket->send($req);
+print "Sent data of length $size\n";
+
+#notify server that request has been sent
+shutdown($socket, 1);
+
+#receive a response of up to 1024 characters from server
+$response = "";
+$socket->recv($response, 1024);
+print "Received response: $response\n";
+
+$socket->close();
+
+4. 
+#!/usr/bin/perl
+die "Usage: ./IP_calc IP_Address Netmask\n" if (scalar @ARGV < 2);
+@IP = split /\./, $ARGV[0];			#split IP address and Netmask on ., save result in lists IP and NM
+@NM = split /\./, $ARGV[1];
+die "Invalid IP address" if (scalar @IP != 4);
+die "Invalid Netmask" if (scalar @NM != 4);
+for ($i = 0; $i < 4; $i = $i + 1) {
+	$NA[$i] = ($IP[$i] + 0) & ($NM[$i] + 0);		#zeroes are added here to make interpreter recognize the values as numbers, not strings
+	$BA[$i] = ($IP[$i] + 0) | (~($NM[$i] + 0) & 0xFF);	#Network address (@NA) and broadcast address (@BA) calculated from IP and netmask
+}								#To get least significant byte of complimented netmask, it is anded with 0xFF
+print "Network Address: $NA[0].$NA[1].$NA[2].$NA[3]\n";
+print "Broadcast Address: $BA[0].$BA[1].$BA[2].$BA[3]\n";
+
+5.
+-----------------------------------TCP Server-------------------------------------------------
+#!/usr/bin/perl
+
+#Code for this assignment taken from xmodulo.com/how-to-write-simple-tcp-server-and-client-in-perl.html, and modified for the purposes of this assignment
+use IO::Socket::INET;
+
+# auto0flush on socket
+$| = 1;
+
+# creating a listening socket
+$socket = new IO::Socket::INET (
+	LocalHost => '0.0.0.0',
+	LocalPort => '7777',
+	Proto => 'tcp',
+	Listen => 5,
+	Reuse => 1
+);
+die "Cannot create socket $|\n" unless $socket;
+print "server waiting for client connection port 7777\n";
+
+while(1) {
+	# waiting for a new client connection
+	$client_socket = $socket->accept();
+	$client_address = $client_socket->peerport();
+	print "connection from $client_address:$client_port\n";
+	$temp = `/opt/vc/bin/vcgencmd measure_temp`;					#performs bash command and stores string result in $temp
+	$size = $client_socket->send($temp);						#sends temperature of CPU to client
+	print "Sent data of size $size\n";
+
+	# read up to 1024 characters from the connected client
+	$data = "";
+	$client_socket->recv($data, 1024);
+	print "Received Data: $data\n";
+
+	#Write response data to the connected client
+	$data = "Data Received";
+	$client_socket->send($data);
+
+	#Notify client that response has been sent
+	shutdown($client_socket, 1);
+}
+
+$socket->close();
+
+--------------------------------TCP Client------------------------------------------------------
+#!/usr/bin/perl
+use IO::Socket::INET;
+
+#auto-flush on socket
+$| = 1;
+
+#create a connecting socket
+$socket = new IO::Socket::INET (
+	PeerHost => '192.168.1.132',
+	PeerPort => '7777',
+	Proto => 'tcp'
+);
+die "Cannot connect to the server $|\n" unless $socket;
+print "Connected to the server\n";
+$socket->recv($temp, 1024);
+print "$temp";
+#Data to send to a server
+$req = 'Hello World';
+$size = $socket->send($req);
+print "Sent data of length $size\n";
+
+#notify server that request has been sent
+shutdown($socket, 1);
+
+#receive a response of up to 1024 characters from server
+$response = "";
+$socket->recv($response, 1024);
+print "Received response: $response\n";
+
+$socket->close();

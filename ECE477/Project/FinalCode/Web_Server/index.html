@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Alarm Log</title>
+
+	<link rel = "stylesheet" type = "text/css" href = "https://bootswatch.com/yeti/bootstrap.min.css">
+	
+	<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	
+	<style>
+	.body-content {
+		margin-top:50px;
+	}
+	</style>
+</head>
+<body>
+<nav class = "navbar navbar-default navbar-fixed-top">
+	<div class = "container">
+		<span class = "navbar-header">
+			<a class = "navbar-brand" href = "#">Alarm Log</a>
+		</span>
+		<ul class = "nav navbar-nav navbar-right">
+			<li><a href= "#" id = "updateEmailShow">Update Email</a></li>
+		</ul>
+	</div>
+</nav>
+<div class = "container body-content text-center">
+	<div class = "row">
+		<div class = "btn-group col-xs-4 col-xs-offset-4">
+			<button class = "btn btn-default col-xs-6" id="btnArm">Arm</button>
+			<button class = "btn btn-default col-xs-6" id ="btnDisarm">Disarm</button>
+		</div>
+		<div class="col-xs-12">
+			<small>The alarm is currently <strong id="alarmStatusLabel" class="text-warning">Armed</strong>
+			</small>
+		</div>
+	</div>
+<br/>
+<table class = "table table-striped">
+	<thead>
+		<tr>
+			<th class = "col-xs-2">Date</th>
+			<th class = "col-xs-2">Time </th>
+			<th class = "col-xs-6">Event Description</th>
+		</tr>
+	</thead>
+	<tbody id="dataTable">
+		<tr>
+			<td class = "text-left">14 April 2016</td>
+			<td class = "text-left">17:57</td>
+			<td class = "text-left">Alarm Armed</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+	
+<div class="modal fade" id="emailUpdateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      
+      <div class="modal-body">
+        <div class="input-group">
+         <input type="text" class="form-control" id="emailUpdateText" placeholder="email@domain.com" />
+         <span class="input-group-btn">
+          <button class="btn btn-primary" id="emailUpdateSubmit">Submit</button>
+         </span>
+        </div> 
+      </div>
+    </div>
+  </div>
+</div>
+	
+<script type="text/javascript">
+
+function GetAlarmStatus()
+{
+ var alarmState = 0;
+ var prevState;
+ //request alarm status from server
+ $.ajax({
+       url:'getState.php',
+	   type:'get',
+       complete: function (response) {
+         alarmState = response.responseText;
+       },
+       error: function () {
+        //if you were really fancy here, you'd use toastr.js
+         alert("An unhandled exception occurred.");
+       }
+ });
+
+ SetAlarmStatusLabel(alarmState);
+	getLog();
+}
+
+// alarmState: 0 - Disarmed, 1 - Armed, 2 - Tripped
+function SetAlarmStatusLabel(alarmState)
+{
+ switch(alarmState)
+ {
+  case 'D':
+   //make the button look depressed
+   $("#btnDisarm").addClass("active");
+   $("#btnArm").removeClass("active");
+
+   //update status label
+   $("#alarmStatusLabel").removeClass("text-warning");
+   $("#alarmStatusLabel").removeClass("text-danger");
+   $("#alarmStatusLabel").html("Disarmed");
+   $("#alarmStatusLabel").addClass("text-success");
+   break;
+
+  case 'A':
+   //make the button look depressed
+   $("#btnArm").addClass("active");
+   $("#btnDisarm").removeClass("active");
+
+   //update status label
+   $("#alarmStatusLabel").removeClass("text-success");
+   $("#alarmStatusLabel").removeClass("text-danger");
+   $("#alarmStatusLabel").html("Armed");
+   $("#alarmStatusLabel").addClass("text-warning");
+   break;
+
+  case 'T':
+   //undepress both button
+   $("#btnArm").removeClass("active");
+   $("#btnDisarm").removeClass("active");
+
+   //update status label
+   $("#alarmStatusLabel").removeClass("text-success");
+   $("#alarmStatusLabel").removeClass("text-warning");
+   $("#alarmStatusLabel").html("Tripped");
+   $("#alarmStatusLabel").addClass("text-danger");
+   break;
+ }
+}
+
+function getLog()
+{
+	$.ajax({
+		url:'getLog.php',
+		type: 'get',
+		complete: function (response) {
+			$("#dataTable").html("");
+			var body = JSON.parse(response.responseText);
+			$.each(body, function(index, value) {
+				var line = value.split(',');
+				$("#dataTable").append("<tr><td class = 'text-left'>" + line[0] + "</td><td class = 'text-left'>" + line[1] + "</td><td class = 'text-left'>" + line[2] + "</td></tr>");
+			});
+		},
+		error: function() {
+			alert("Getting log failed.");
+		}
+	});
+		
+}
+
+function isValidEmailAddress(emailAddress) {
+    var pattern = /^([a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+(\.[a-z\d!#$%&'*+\-\/=?^_`{|}~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]+)*|"((([ \t]*\r\n)?[ \t]+)?([\x01-\x08\x0b\x0c\x0e-\x1f\x7f\x21\x23-\x5b\x5d-\x7e\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|\\[\x01-\x09\x0b\x0c\x0d-\x7f\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))*(([ \t]*\r\n)?[ \t]+)?")@(([a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\d\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.)+([a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]|[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF][a-z\d\-._~\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]*[a-z\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])\.?$/i;
+    return pattern.test(emailAddress);
+};
+
+$(document).ready(function() {
+ $("#btnArm").click(function() {
+  //post to server to update alarm status
+  $.ajax({
+        url:'setState.php',
+        type: 'post',
+        data: {"armed":"1"},
+        complete: function (response) {
+          //make the button look depressed
+    $("#btnArm").addClass("active");
+    $("#btnDisarm").removeClass("active");
+
+    //update status label
+    $("#alarmStatusLabel").removeClass("text-success");
+    $("#alarmStatusLabel").removeClass("text-danger");
+    $("#alarmStatusLabel").html("Armed");
+    $("#alarmStatusLabel").addClass("text-warning");
+        },
+        error: function () {
+         //if you were really fancy here, you'd use toastr.js
+          alert("An unhandled exception occurred. Please refresh the page and try again.");
+        }
+  });
+ });
+
+ $("#btnDisarm").click(function() {
+  //post to server to update alarm status
+ 	 $.ajax({
+        url:'setState.php',
+        type: 'post',
+        data: {"armed":"0"},
+        complete: function (response) {
+          //make the button look depressed
+    $("#btnDisarm").addClass("active");
+    $("#btnArm").removeClass("active");
+
+    //update status label
+    $("#alarmStatusLabel").removeClass("text-warning");
+    $("#alarmStatusLabel").removeClass("text-danger");
+    $("#alarmStatusLabel").html("Disarmed");
+    $("#alarmStatusLabel").addClass("text-success");
+        },
+        error: function () {
+         //if you were really fancy here, you'd use toastr.js
+          alert("An unhandled exception occurred. Please refresh the page and try again.");
+        }
+  });
+ });
+
+ $("#updateEmailShow").click(function() {
+  //show the modal and clear any leftover text
+  $("#emailUpdateModal").modal("show");
+  $("#emailUpdateText").val("");
+ });
+
+ $("#emailUpdateSubmit").click(function() {
+  var emailCandidate = $("#emailUpdateText").val();
+
+  if(isValidEmailAddress(emailCandidate) != true)
+  {
+   $("#emailValidationError").removeClass("hidden");
+   return;
+  }
+
+  $("#emailValidationError").addClass("hidden");
+
+  //update email on server
+  $.ajax({
+        url:'updateEmail.php',
+        type:'post',
+        data:{"email": emailCandidate},
+        complete: function (response) {
+          alarmState = response;
+        },
+        error: function () {
+         //if you were really fancy here, you'd use toastr.js
+          alert("An unhandled exception occurred.");
+        }
+  });
+
+  //hide modal
+  $("#emailUpdateModal").modal("hide");
+ });
+
+ //call refresh every second
+ window.setInterval(GetAlarmStatus, 1000);
+});
+</script>
+</body>
+</html>

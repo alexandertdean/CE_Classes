@@ -1,0 +1,41 @@
+#!/usr/bin/perl
+
+#Code for this assignment taken from xmodulo.com/how-to-write-simple-tcp-server-and-client-in-perl.html, and modified for the purposes of this assignment
+use IO::Socket::INET;
+
+# auto0flush on socket
+$| = 1;
+
+# creating a listening socket
+$socket = new IO::Socket::INET (
+	LocalHost => '0.0.0.0',
+	LocalPort => '7777',
+	Proto => 'tcp',
+	Listen => 5,
+	Reuse => 1
+);
+die "Cannot create socket $|\n" unless $socket;
+print "server waiting for client connection port 7777\n";
+
+while(1) {
+	# waiting for a new client connection
+	$client_socket = $socket->accept();
+	$client_address = $client_socket->peerport();
+	print "connection from $client_address:$client_port\n";
+	$temp = `/opt/vc/bin/vcgencmd measure_temp`;
+	$size = $client_socket->send($temp);
+	print "Sent data of size $size\n";
+	# read up to 1024 characters from the connected client
+	$data = "";
+	$client_socket->recv($data, 1024);
+	print "Received Data: $data\n";
+
+	#Write response data to the connected client
+	$data = "Data Received";
+	$client_socket->send($data);
+
+	#Notify client that response has been sent
+	shutdown($client_socket, 1);
+}
+
+$socket->close();

@@ -1,0 +1,7 @@
+--cpu Cortex-M4.fp --branchpatch=sdcomp-29491-629360
+".\objects\main.o"
+".\objects\startup_stm32l476xx.o"
+--strict --scatter ".\Objects\SeniorProject_STMDiscovery.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\Listings\SeniorProject_STMDiscovery.map" -o .\Objects\SeniorProject_STMDiscovery.axf

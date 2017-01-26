@@ -1,0 +1,11 @@
+Alexander Dean
+Project 2
+ECE 331
+
+IP Address for Web Server: 72.224.248.107/index.html
+
+How it works:
+The program getTemp.c uses the I2C bus to get a temperature value in degrees celsius from a temperature sensor. It is called every minute by a crontab. It calls the PHP script storeTemp.php, which stores the temperature in a SQLite3 database with the time and date at which it was taken. 
+The web server, index.html, contains an image that calls a PHP script, makeGraph.php. This script queries the SQLite3 database and gets the temperatures for the last 1440 minutes, or 24 hours, and prints lines on a GD image accordingly.
+The crontab for this project looks like the following:
+* * * * * /home/pi/Documents/ECE331/templogger/test

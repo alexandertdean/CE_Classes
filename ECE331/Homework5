@@ -1,0 +1,175 @@
+Alexander Dean
+Homework 5
+
+1. Code is available on git.
+
+-----------encode.h------------------
+#ifndef __ENCODE
+#define __ENCODE
+
+int encode(char *data, int stuffOn, int len);
+
+#endif 
+----------encode.c------------------
+#include <stdio.h>
+#include "encode.h"  
+
+int encode(char *data, int stuffOn, int len)
+{
+	char state = 1;
+	char oneCount;							//used for counting 1's for bit stuffing
+	char bit;							//counts number of bits to know when to increment stuffed array;
+	int i;								//for loop iterator variable
+	int j;								//iterator for stuffed array
+	for (i = 0; i < len; i++) {
+		for (j = 0; j < 8; j++) {
+			bit = data[i] & (0x01 << j);
+			printf("%c ", state?'S':'M');
+			if (bit != 0) {
+				oneCount++;
+				if (oneCount == 5 && stuffOn != 0) {	//checks if bit stuffing should occur
+					printf("M ");			//stuffs a 0
+					state = !state;
+				}
+			} else {
+				oneCount = 0;
+				state = !state;				//toggles state
+			}
+			
+		}
+	}
+	printf("%c\n", state?'S':'M');
+	return 0;
+}
+-----------encodeTest.c------------
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <string.h>
+#include <stdint.h>
+#include "encode.h"
+
+int main (int argc, char *argv[])
+{	
+	int fd;							//file descriptor for data file
+	char *buffer;							//buffer for file read and write
+	int len;							//error checking variable for write and read functions
+	unsigned int bit_stuff_on;
+	if (argc < 3) {							//checks proper number of arguments passed on command line
+		printf("Usage:   %s string bit_stuff_enable\n\t %s -f file_name bit_stuff_enable\n\n", argv[0], argv[0]);
+		return 1;
+	}
+	if (argc == 3) {						//if two command line arguments, encode the string passed as the second argument
+		bit_stuff_on = atoi(argv[2]);
+		if (bit_stuff_on > 1) {
+			printf("Value for \"bit_stuff_enable\" is not 1 or 0\n");
+			return 1;
+		}
+		encode(argv[1], bit_stuff_on, strlen(argv[1]));
+	} else {							//if three command line arguments, encode the data in the file passed in the third argument
+		bit_stuff_on = atoi(argv[3]);
+		if (bit_stuff_on > 1) {
+			printf("Value for \"bit_stuff_enable\" is not 1 or 0\n");
+		}
+		fd = open(argv[2], O_RDONLY);
+		if (fd < 0) {
+			perror("open()");
+			return 1;
+		}
+		buffer = malloc(4096);
+		len = read(fd, buffer, 4096);
+		if (len <= 0) {
+			printf("No data read from file");
+			return 1;
+		}
+		close (fd);
+		encode(buffer, atoi(argv[3]), len);	
+	}
+	return 0;
+}
+--------Makefile---------------
+TARGET=encodeTest
+CFLAGS=-Wall -g
+OBJS=encode.o encodeTest.o
+CC=gcc
+all: $(TARGET)
+$(TARGET): $(OBJS)
+	gcc -o $(TARGET) $(OBJS)
+
+clean:
+	rm -f ${TARGET} ${OBJS}
+
+.PHONY: clean all
+
+2. Code available on git in ECE331 repository. (http://gitlab.eece.maine.edu:3000/alexander.dean/ECE331.git)
+
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+
+uint16_t crc(uint8_t *data, int len);
+
+int main(int argc, char *argv[])
+{
+	uint16_t crcout;					
+	if (argc > 2) {						//checks for proper number of arguments
+		printf("Usage: %s input", argv[0]);		
+		return 1; 
+	}
+	
+	crcout = crc((uint8_t *)argv[1], strlen(argv[1]));	//passes the data and length of data in bytes to crc function
+	printf("%4X\n", crcout);				//prints result of CRC calculation
+	return 0;
+}
+
+uint16_t crc(uint8_t *data, int len)
+{	
+	uint16_t crc = 0xFFFF;					//CRC register initialized to 0xFF as given in instructions
+	uint16_t poly = 0x8408;					//CRC-16-CCITT reverse CRC value
+	int byte;						//iterator for for loop that iterates through each byte of data
+	int bit;						//iterator for for loop that iterates through each bit of a given byte
+	int xorOn;						//feedback value that handles 17th bit 
+	for (byte = 0; byte < len; byte++) {
+		for (bit = 0; bit < 8; bit++) {
+			xorOn = (data[byte] & 1) ^ (crc & 1);	//calculates feedback value
+			crc >>= 1;				
+			data[byte] >>= 1;			//feeds in next bit of data
+			if (xorOn) {				//if feedback is 0, CRC can be shifted with no other operation. if feedback is 1, values at polynomial must be inverted
+				crc ^= poly;
+			}
+		}
+	}
+	return ~crc;						//returns 1's compliment of calculated value
+}
+
+3. 
+a) chmod 511 voldemort
+b) chmod u-r voldemort
+   chmod g-x voldemort
+   chmod go+w voldemort
+
+4. sudo apt-get update
+   sudo apt-get upgrade
+   
+5. exprot WANT_SYMVERS=1
+   sudo rpi-update
+   reboot
+   cd /usr/src/linux-4.1.7-v7+
+   sudo make mrproper
+   sudo modprobe configs
+   sudo gunzip -c /proc/config.gz > .config
+   ln /boot/Modules7.symvers -t Modules.symvers
+   ln -s /lib/modules build
+   sudo ln -s /lib/modules -t build source 
+
+6. find -user pi -type d | wc -l
+
+7. dd obs=32MB of=ddfile if=/dev/zero
+   mkfs -t ext3 ddfile
+   mount ddfile /mnt
+   sudo cp Homework5 /mnt
+
+8. When "stat build" is perfomred inside the /usr/src/linux-4.1.7-v7+ directory, it states that the file type is a symbolic link, and the number of links to that file is 1, which is the file itself. However, when "stat /lib/modules" is performed, it shows that there are 6 links to the file. No relation with inode numbers could be found. 

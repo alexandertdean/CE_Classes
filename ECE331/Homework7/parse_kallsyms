@@ -1,0 +1,14 @@
+#!/usr/bin/perl
+open(FILE, "/proc/kallsyms")
+	or die "cannot open < /proc/kallsyms: $!";
+$i = 0;
+while (<FILE>) {
+	($address[$i], $type[$i], $symName[$i], $kerMod[$i]) = split(" ", $_);
+	$i = $i + 1;
+}
+$i = 0;
+foreach $name (@symName) {
+	print $address[$i], "\n" if $name =~ /.*vector.*/;
+	$i = $i + 1;
+}
+close FILE;
