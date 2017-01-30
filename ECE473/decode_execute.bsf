@@ -1,0 +1,260 @@
+/*
+WARNING: Do NOT edit the input and output ports in this file in a text
+editor if you plan to continue editing the block that represents it in
+the Block Editor! File corruption is VERY likely to occur.
+*/
+/*
+Copyright (C) 1991-2013 Altera Corporation
+Your use of Altera Corporation's design tools, logic functions 
+and other software and tools, and its AMPP partner logic 
+functions, and any output files from any of the foregoing 
+(including device programming or simulation files), and any 
+associated documentation or information are expressly subject 
+to the terms and conditions of the Altera Program License 
+Subscription Agreement, Altera MegaCore Function License 
+Agreement, or other applicable license agreement, including, 
+without limitation, that your use is for the sole purpose of 
+programming logic devices manufactured by Altera and sold by 
+Altera or its authorized distributors.  Please refer to the 
+applicable agreement for further details.
+*/
+(header "symbol" (version "1.1"))
+(symbol
+	(rect 16 16 328 352)
+	(text "decode_execute" (rect 5 0 69 12)(font "Arial" ))
+	(text "inst" (rect 8 320 20 332)(font "Arial" ))
+	(port
+		(pt 0 32)
+		(input)
+		(text "op_decode[5..0]" (rect 0 0 63 12)(font "Arial" ))
+		(text "op_decode[5..0]" (rect 21 27 84 39)(font "Arial" ))
+		(line (pt 0 32)(pt 16 32)(line_width 3))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "rs_decode[4..0]" (rect 0 0 63 12)(font "Arial" ))
+		(text "rs_decode[4..0]" (rect 21 43 84 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 3))
+	)
+	(port
+		(pt 0 64)
+		(input)
+		(text "rt_decode[4..0]" (rect 0 0 61 12)(font "Arial" ))
+		(text "rt_decode[4..0]" (rect 21 59 82 71)(font "Arial" ))
+		(line (pt 0 64)(pt 16 64)(line_width 3))
+	)
+	(port
+		(pt 0 80)
+		(input)
+		(text "rd_decode[4..0]" (rect 0 0 63 12)(font "Arial" ))
+		(text "rd_decode[4..0]" (rect 21 75 84 87)(font "Arial" ))
+		(line (pt 0 80)(pt 16 80)(line_width 3))
+	)
+	(port
+		(pt 0 96)
+		(input)
+		(text "shamt_decode[4..0]" (rect 0 0 80 12)(font "Arial" ))
+		(text "shamt_decode[4..0]" (rect 21 91 101 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
+		(pt 0 112)
+		(input)
+		(text "funct_decode[5..0]" (rect 0 0 74 12)(font "Arial" ))
+		(text "funct_decode[5..0]" (rect 21 107 95 119)(font "Arial" ))
+		(line (pt 0 112)(pt 16 112)(line_width 3))
+	)
+	(port
+		(pt 0 128)
+		(input)
+		(text "data_out_1_decode[31..0]" (rect 0 0 101 12)(font "Arial" ))
+		(text "data_out_1_decode[31..0]" (rect 21 123 122 135)(font "Arial" ))
+		(line (pt 0 128)(pt 16 128)(line_width 3))
+	)
+	(port
+		(pt 0 144)
+		(input)
+		(text "data_out_2_decode[31..0]" (rect 0 0 102 12)(font "Arial" ))
+		(text "data_out_2_decode[31..0]" (rect 21 139 123 151)(font "Arial" ))
+		(line (pt 0 144)(pt 16 144)(line_width 3))
+	)
+	(port
+		(pt 0 160)
+		(input)
+		(text "immediate_decode[15..0]" (rect 0 0 97 12)(font "Arial" ))
+		(text "immediate_decode[15..0]" (rect 21 155 118 167)(font "Arial" ))
+		(line (pt 0 160)(pt 16 160)(line_width 3))
+	)
+	(port
+		(pt 0 176)
+		(input)
+		(text "address_decode[25..0]" (rect 0 0 90 12)(font "Arial" ))
+		(text "address_decode[25..0]" (rect 21 171 111 183)(font "Arial" ))
+		(line (pt 0 176)(pt 16 176)(line_width 3))
+	)
+	(port
+		(pt 0 192)
+		(input)
+		(text "aluFunc_decode[4..0]" (rect 0 0 86 12)(font "Arial" ))
+		(text "aluFunc_decode[4..0]" (rect 21 187 107 199)(font "Arial" ))
+		(line (pt 0 192)(pt 16 192)(line_width 3))
+	)
+	(port
+		(pt 0 208)
+		(input)
+		(text "regWrite_decode" (rect 0 0 69 12)(font "Arial" ))
+		(text "regWrite_decode" (rect 21 203 90 215)(font "Arial" ))
+		(line (pt 0 208)(pt 16 208)(line_width 1))
+	)
+	(port
+		(pt 0 224)
+		(input)
+		(text "memRead_decode" (rect 0 0 77 12)(font "Arial" ))
+		(text "memRead_decode" (rect 21 219 98 231)(font "Arial" ))
+		(line (pt 0 224)(pt 16 224)(line_width 1))
+	)
+	(port
+		(pt 0 240)
+		(input)
+		(text "memWrite_decode" (rect 0 0 77 12)(font "Arial" ))
+		(text "memWrite_decode" (rect 21 235 98 247)(font "Arial" ))
+		(line (pt 0 240)(pt 16 240)(line_width 1))
+	)
+	(port
+		(pt 0 256)
+		(input)
+		(text "pause" (rect 0 0 23 12)(font "Arial" ))
+		(text "pause" (rect 21 251 44 263)(font "Arial" ))
+		(line (pt 0 256)(pt 16 256)(line_width 1))
+	)
+	(port
+		(pt 0 272)
+		(input)
+		(text "clock" (rect 0 0 20 12)(font "Arial" ))
+		(text "clock" (rect 21 267 41 279)(font "Arial" ))
+		(line (pt 0 272)(pt 16 272)(line_width 1))
+	)
+	(port
+		(pt 0 288)
+		(input)
+		(text "PC_decode[31..0]" (rect 0 0 70 12)(font "Arial" ))
+		(text "PC_decode[31..0]" (rect 21 283 91 295)(font "Arial" ))
+		(line (pt 0 288)(pt 16 288)(line_width 3))
+	)
+	(port
+		(pt 0 304)
+		(input)
+		(text "pausePC" (rect 0 0 36 12)(font "Arial" ))
+		(text "pausePC" (rect 21 299 57 311)(font "Arial" ))
+		(line (pt 0 304)(pt 16 304)(line_width 1))
+	)
+	(port
+		(pt 312 32)
+		(output)
+		(text "op_execute[5..0]" (rect 0 0 66 12)(font "Arial" ))
+		(text "op_execute[5..0]" (rect 225 27 291 39)(font "Arial" ))
+		(line (pt 312 32)(pt 296 32)(line_width 3))
+	)
+	(port
+		(pt 312 48)
+		(output)
+		(text "rs_execute[4..0]" (rect 0 0 66 12)(font "Arial" ))
+		(text "rs_execute[4..0]" (rect 225 43 291 55)(font "Arial" ))
+		(line (pt 312 48)(pt 296 48)(line_width 3))
+	)
+	(port
+		(pt 312 64)
+		(output)
+		(text "rt_execute[4..0]" (rect 0 0 63 12)(font "Arial" ))
+		(text "rt_execute[4..0]" (rect 228 59 291 71)(font "Arial" ))
+		(line (pt 312 64)(pt 296 64)(line_width 3))
+	)
+	(port
+		(pt 312 80)
+		(output)
+		(text "rd_execute[4..0]" (rect 0 0 66 12)(font "Arial" ))
+		(text "rd_execute[4..0]" (rect 225 75 291 87)(font "Arial" ))
+		(line (pt 312 80)(pt 296 80)(line_width 3))
+	)
+	(port
+		(pt 312 96)
+		(output)
+		(text "shamt_execute[4..0]" (rect 0 0 82 12)(font "Arial" ))
+		(text "shamt_execute[4..0]" (rect 209 91 291 103)(font "Arial" ))
+		(line (pt 312 96)(pt 296 96)(line_width 3))
+	)
+	(port
+		(pt 312 112)
+		(output)
+		(text "funct_execute[5..0]" (rect 0 0 76 12)(font "Arial" ))
+		(text "funct_execute[5..0]" (rect 215 107 291 119)(font "Arial" ))
+		(line (pt 312 112)(pt 296 112)(line_width 3))
+	)
+	(port
+		(pt 312 128)
+		(output)
+		(text "data_out_1_execute[31..0]" (rect 0 0 103 12)(font "Arial" ))
+		(text "data_out_1_execute[31..0]" (rect 188 123 291 135)(font "Arial" ))
+		(line (pt 312 128)(pt 296 128)(line_width 3))
+	)
+	(port
+		(pt 312 144)
+		(output)
+		(text "data_out_2_execute[31..0]" (rect 0 0 105 12)(font "Arial" ))
+		(text "data_out_2_execute[31..0]" (rect 186 139 291 151)(font "Arial" ))
+		(line (pt 312 144)(pt 296 144)(line_width 3))
+	)
+	(port
+		(pt 312 160)
+		(output)
+		(text "immediate_execute[15..0]" (rect 0 0 100 12)(font "Arial" ))
+		(text "immediate_execute[15..0]" (rect 191 155 291 167)(font "Arial" ))
+		(line (pt 312 160)(pt 296 160)(line_width 3))
+	)
+	(port
+		(pt 312 176)
+		(output)
+		(text "address_execute[25..0]" (rect 0 0 93 12)(font "Arial" ))
+		(text "address_execute[25..0]" (rect 198 171 291 183)(font "Arial" ))
+		(line (pt 312 176)(pt 296 176)(line_width 3))
+	)
+	(port
+		(pt 312 192)
+		(output)
+		(text "aluFunc_execute[4..0]" (rect 0 0 88 12)(font "Arial" ))
+		(text "aluFunc_execute[4..0]" (rect 203 187 291 199)(font "Arial" ))
+		(line (pt 312 192)(pt 296 192)(line_width 3))
+	)
+	(port
+		(pt 312 208)
+		(output)
+		(text "regWrite_execute" (rect 0 0 71 12)(font "Arial" ))
+		(text "regWrite_execute" (rect 220 203 291 215)(font "Arial" ))
+		(line (pt 312 208)(pt 296 208)(line_width 1))
+	)
+	(port
+		(pt 312 224)
+		(output)
+		(text "memRead_execute" (rect 0 0 80 12)(font "Arial" ))
+		(text "memRead_execute" (rect 211 219 291 231)(font "Arial" ))
+		(line (pt 312 224)(pt 296 224)(line_width 1))
+	)
+	(port
+		(pt 312 240)
+		(output)
+		(text "memWrite_execute" (rect 0 0 80 12)(font "Arial" ))
+		(text "memWrite_execute" (rect 211 235 291 247)(font "Arial" ))
+		(line (pt 312 240)(pt 296 240)(line_width 1))
+	)
+	(port
+		(pt 312 256)
+		(output)
+		(text "PC_execute[31..0]" (rect 0 0 73 12)(font "Arial" ))
+		(text "PC_execute[31..0]" (rect 218 251 291 263)(font "Arial" ))
+		(line (pt 312 256)(pt 296 256)(line_width 3))
+	)
+	(drawing
+		(rectangle (rect 16 16 296 320)(line_width 1))
+	)
+)

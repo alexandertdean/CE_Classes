@@ -1,0 +1,14 @@
+module PCstallHandler (
+	input wire [4:0] aluFunc,
+	
+	output reg pausePC);
+	
+	initial begin
+		pausePC <= 0;
+	end
+	
+	always begin
+		pausePC <= 0;
+		if (aluFunc == 24) pausePC <= 1;
+	end
+endmodule

@@ -1,0 +1,10 @@
+module fetch_decode (
+	input wire [31:0] instruction_fetch,
+	input wire clock,
+	
+	output reg instruction_decode);
+	
+	always @(negedge clock) begin
+		insutrction_decode = instruction_fetch;
+	end
+endmodule

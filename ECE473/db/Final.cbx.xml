@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<LOG_ROOT>
+	<PROJECT NAME="Final">
+		<CBX_INST_ENTRY INSTANCE_NAME="|BlockDiagram|ALU:inst30|lpm_mult:Mult0" CBX_FILE_NAME="mult_l8t.tdf"/>
+		<CBX_INST_ENTRY INSTANCE_NAME="|BlockDiagram|instructionMemory:instructionMemory|altsyncram:instruction_memory_rtl_0" CBX_FILE_NAME="altsyncram_9p71.tdf"/>
+	</PROJECT>
+</LOG_ROOT>

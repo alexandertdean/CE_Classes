@@ -1,0 +1,37 @@
+module jumpHandler (
+	input wire [4:0] aluFunc,
+	input wire [31:0] jrAddress,
+	input wire [25:0] jtypeAddress,
+	input wire [15:0] branchAddress,
+	input wire branchConfirm,
+	
+	input wire clock,
+	
+	output reg [31:0] newPC,
+	output reg overwritePC,
+	output reg pause);
+	
+	reg [1:0] extraPause;
+	
+	initial begin
+		overwritePC <= 0;
+		extraPause <= 0;
+	end
+	
+	always begin
+		if (extraPause) begin
+		end
+		else if (aluFunc == 12) begin
+			newPC <= jrAddress;
+			overwritePC <= 1;
+			pause <= 1;
+			extraPause <= 1;
+		end
+	end
+	always @(posedge clock) begin
+		if (extraPause) begin
+			pause <= 1;
+		end
+		extraPause = extraPause - 1;
+	end
+endmodule

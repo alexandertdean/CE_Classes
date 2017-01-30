@@ -1,0 +1,9 @@
+module programCounter (
+	input wire [31:0] PCoverride,
+	input wire reset,
+	input wire pause,
+	input wire clock,
+	
+	output reg [31:0] instruction_address);
+	
+	
